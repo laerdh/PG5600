@@ -32,11 +32,7 @@ maximum(a: 2, b: 2)
 
 // Oppgave 2
 func sumOfAllValues(inArray: [Int]) -> Int {
-    var sum = 0
-    for i in inArray {
-        sum += i
-    }
-    return sum
+    return inArray.reduce(0,+)
 }
 
 let array1 = [34, 10, 10, 10, 100]
@@ -108,21 +104,12 @@ enum Calculation {
     case Sum
 }
 func calculate(_ type: Calculation, _ numbers: Int...) -> Int {
-    var sum = 0
-    
     switch (type) {
         case .Product:
-            sum = 1
-            for n in numbers {
-                sum *= n
-        }
+            return numbers.reduce(1,*)
         case .Sum:
-            for n in numbers {
-                sum += n
-        }
+            return numbers.reduce(0,+)
     }
-    
-    return sum
 }
 
 calculate(.Product, 2, 5, 5)
@@ -133,14 +120,10 @@ calculate(.Sum, 10, 10)
 
 // Oppgave 6c
 func calculate2(_ numbers: Int...) -> (product: Int, sum: Int) {
-    var result = (sum: 0, product: 1)
-    
-    for n in numbers {
-        result.sum += n
-        result.product *= n
-    }
-    
-    return result
+    let p = numbers.reduce(1, *)
+    let s = numbers.reduce(0, +)
+
+    return (product: p, sum: s)
 }
 
 let result = calculate2(2, 5, 5)
