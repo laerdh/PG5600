@@ -131,7 +131,7 @@ print("Produkt: \(result.product), Sum: \(result.sum)")
 
 
 // Oppgave 7
-func getCalculator(_ op: Character?) -> (_ numbers: Int...) -> Int {
+func getCalculator(_ op: Character?) -> ((_ numbers: Int...) -> Int)? {
     // Function declarations
     func add(_ numbers: Int...) -> Int {
         return numbers.reduce(0,+)
@@ -141,7 +141,6 @@ func getCalculator(_ op: Character?) -> (_ numbers: Int...) -> Int {
         return numbers.reduce(1,*)
     }
     
-    
     if let actualOperator = op {
         switch (actualOperator) {
             case "+":
@@ -149,17 +148,119 @@ func getCalculator(_ op: Character?) -> (_ numbers: Int...) -> Int {
             case "*":
                 return multiply
             default:
-                break
+                return nil
         }
     }
-    return add
+    return nil
 }
 
-/*
- if let calcFn = getCalculator(Character("+")) {
-    print(calcFn([3, 5, 2, 4]))
+
+if let calcFn = getCalculator(Character("+")) {
+    print(calcFn(1, 3, 5, 3))
 }
-*/
+
+
+// Oppgave 8
+func request(_ address: String, _ infoFunction: (String?) -> Void) {
+    switch (address) {
+        case "http://www.vg.no":
+            infoFunction("Verdens Gang")
+        case "http://www.aftenposten.no":
+            infoFunction("Aftenposten")
+        default:
+            infoFunction(nil)
+    }
+}
+
+request("http://www.vg.no", { description in
+    if let actualDescription = description {
+        print(description)
+    } else {
+        print("Fant ikke noen beskrivelse")
+    }
+})
+
+request("http://www.test.no", { description in
+    if let actualDescription = description {
+        print(description)
+    } else {
+        print("Fant ikke noen beskrivelse")
+    }
+})
+
+
+// Oppgave 9a, 9b og 9c
+enum HTTPMethod {
+    case GET
+    case POST
+    case PUT
+    case DELETE
+}
+func startRequesting(url: String?, method: HTTPMethod, success: (AnyObject) -> Void, failure: ((NSError) -> Void)? = nil) {
+    if let actualUrl = url {
+        success("Got result from \(actualUrl) when using \(method)!" as AnyObject)
+    } else {
+        if let actualFailure = failure {
+            actualFailure(NSError(domain: "Failed to connect to \(url)", code: 404, userInfo: nil))
+        }
+    }
+}
+
+
+// Test
+startRequesting(url: nil, method: .GET, success: { (response) in
+    print(response)
+}, failure: { (error) in
+    print(error)
+})
+
+startRequesting(url: "teambakkis.no", method: .GET, success: { (response) in
+    print(response)
+    }, failure: { (error) in
+    print(error)
+})
+
+startRequesting(url: "teambakkis.no", method: .POST, success: { (response) in
+    print(response)
+})
+
+
+// Oppgave 10
+struct Coordinate {
+    var lat : Float
+    var long : Float
+}
+
+class GeoCache {
+    var coordinate : Coordinate
+    var name : String
+    var hint : String
+    var log = [String]()
+    
+    init(coordinate: Coordinate, name: String, hint: String) {
+        self.coordinate = coordinate
+        self.name = name
+        self.hint = hint
+    }
+    
+    func signLog(message: String) {
+        log.append(message)
+    }
+    
+    func description() -> String {
+        return "\(name)\n\(coordinate.lat)\n\(coordinate.long)\nHint: \(hint)\n\(log.description)"
+    }
+}
+
+let cache = GeoCache(coordinate: Coordinate.init(lat: 59.0, long: 42.0), name: "Westerdals", hint: "Room 81")
+cache.signLog(message: "Someone was here...")
+cache.signLog(message: "I was here")
+
+print(cache.description())
+
+
+
+
 
 
 
